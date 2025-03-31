@@ -1,0 +1,9 @@
+float floati = 5;
+int inti = 6;
+floati += inti*inti;
+inti/=1+1;
+print floati;
+print inti;
+int sum = 0;
+sum = floati+inti*2;
+print sum;
