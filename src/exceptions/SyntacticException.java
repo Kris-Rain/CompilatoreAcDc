@@ -1,4 +1,4 @@
-package scanner;
+package exceptions;
 
 import token.TokenType;
 

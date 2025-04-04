@@ -27,6 +27,7 @@ public class Token {
 		return this.val;
 	}
 
+	@Override
 	public String toString() {
 		if(this.getVal() == null) return "<"+this.getType()+", r:"+this.getLine()+">";
 		return "<"+this.getType()+", r:"+this.getLine()+", "+this.getVal()+">";

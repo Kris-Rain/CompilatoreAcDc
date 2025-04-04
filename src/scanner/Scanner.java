@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.PushbackReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import exceptions.LexicalException;
 import token.*;
 
 public class Scanner {
@@ -90,7 +92,7 @@ public class Scanner {
 		do {
 			nextChar = peekChar();
 			if (skpChars.contains(nextChar)) {
-				System.out.println("Current char: " + nextChar);
+				System.out.println("Current char (skpChar): " + nextChar);
 				if (nextChar == EOF) return new Token(TokenType.EOF, line);
 				if (nextChar == '\n') line++;
 				readChar(); //consumo il carattere
@@ -117,7 +119,7 @@ public class Scanner {
 	private Token scanId() throws LexicalException {
 		StringBuilder id = new StringBuilder();
         while (letters.contains(nextChar = peekChar())){
-            System.out.println("Current char: " + nextChar);
+            System.out.println("Current char (id): " + nextChar);
             id.append(readChar());
         }
         if (keyWordsTkType.containsKey(id.toString().toUpperCase())){
@@ -128,7 +130,7 @@ public class Scanner {
 
 	private Token scanOperator() throws LexicalException {
         char nextCharTemp = readChar();
-        System.out.println("Current char: " + nextCharTemp);
+        System.out.println("Current char (op or delim): " + nextCharTemp);
         if(nextCharTemp != '=' && nextCharTemp != ';'){
             if(peekChar() == '='){
                 readChar();
@@ -145,6 +147,7 @@ public class Scanner {
 		int count = 0;
 
         while (digits.contains(nextChar = peekChar()) || nextChar == '.'){
+			System.out.println("Current char (digit): " + nextChar);
             val.append(readChar());
         }
 
@@ -156,9 +159,9 @@ public class Scanner {
                 count++;
             }
             if(doublePointed || count > 5) throw new LexicalException(this.line, String.valueOf(val));
-            return new Token(keyWordsTkType.get("FLOAT"), line, val.toString());
+            return new Token(TokenType.FLOAT, line, val.toString());
         }
-        else return new Token(keyWordsTkType.get("INT"), line, val.toString());
+        else return new Token(TokenType.INT, line, val.toString());
     }
 
 	private char readChar() throws LexicalException  {
