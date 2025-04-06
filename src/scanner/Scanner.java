@@ -129,7 +129,7 @@ public class Scanner {
 
 	private Token scanOperator() throws LexicalException {
         char nextCharTemp = readChar();
-        System.out.println("Current char (op or delim): " + nextCharTemp);
+        System.out.println("Current char (op_ass or delim): " + nextCharTemp);
         if(nextCharTemp != '=' && nextCharTemp != ';'){
             if(peekChar() == '='){
 				System.out.println("Current char (op_ass): " + peekChar());

@@ -77,7 +77,7 @@ class TestParser {
         Parser parser = parsers.get("testNico/testSoloDichPrintEcc1.txt");
 
         SyntacticException e = assertThrows(SyntacticException.class, parser::parse);
-        assertEquals("Expected ASS or OP_ASS but found SEMI at line 3", e.getMessage());
+        assertEquals("Expected OP_ASS or ASS but found SEMI at line 3", e.getMessage());
     }
 
     @Test
@@ -93,7 +93,7 @@ class TestParser {
         Parser parser = parsers.get("testParserEcc_0.txt");
 
         SyntacticException e = assertThrows(SyntacticException.class, parser::parse);
-        assertEquals("Expected ASS or OP_ASS but found SEMI at line 1", e.getMessage());
+        assertEquals("Expected OP_ASS or ASS but found SEMI at line 1", e.getMessage());
     }
 
     @Test
@@ -117,7 +117,7 @@ class TestParser {
         Parser parser = parsers.get("testParserEcc_3.txt");
 
         SyntacticException e = assertThrows(SyntacticException.class, parser::parse);
-        assertEquals("Expected ASS or OP_ASS but found PLUS at line 2", e.getMessage());
+        assertEquals("Expected OP_ASS or ASS but found PLUS at line 2", e.getMessage());
     }
 
     @Test

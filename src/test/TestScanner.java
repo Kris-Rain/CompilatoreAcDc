@@ -132,8 +132,8 @@ class TestScanner {
 		assertEquals(TokenType.ID, scanner.nextToken().getType());
 		assertEquals(TokenType.OP_ASS, scanner.peekToken().getType());
 		assertEquals(TokenType.OP_ASS, scanner.nextToken().getType());
-		assertEquals(TokenType.TYFLOAT, scanner.peekToken().getType());
-		assertEquals(TokenType.TYFLOAT, scanner.nextToken().getType());
+		assertEquals(TokenType.FLOAT, scanner.peekToken().getType());
+		assertEquals(TokenType.FLOAT, scanner.nextToken().getType());
 		assertEquals(TokenType.SEMI, scanner.peekToken().getType());
 		assertEquals(TokenType.SEMI, scanner.nextToken().getType());
 
@@ -152,8 +152,8 @@ class TestScanner {
 		assertEquals(TokenType.ID, scanner.nextToken().getType());
 		assertEquals(TokenType.PLUS, scanner.peekToken().getType());
 		assertEquals(TokenType.PLUS, scanner.nextToken().getType());
-		assertEquals(TokenType.TYFLOAT, scanner.peekToken().getType());
-		assertEquals(TokenType.TYFLOAT, scanner.nextToken().getType());
+		assertEquals(TokenType.FLOAT, scanner.peekToken().getType());
+		assertEquals(TokenType.FLOAT, scanner.nextToken().getType());
 		assertEquals(TokenType.SEMI, scanner.peekToken().getType());
 		assertEquals(TokenType.SEMI, scanner.nextToken().getType());
 

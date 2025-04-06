@@ -18,7 +18,8 @@ public class TestAST {
             "testAST_1.txt",
             "testAST_2.txt",
             "testOpAssignEquality_first.txt",
-            "testOpAssignEquality_second.txt"
+            "testOpAssignEquality_second.txt",
+            "testOpAssignEquality.txt"
     };
 
     @BeforeEach
@@ -50,12 +51,12 @@ public class TestAST {
         testASTBuild("testAST_1.txt", "[NodeProgram: ["
                 + "[NodeDecl: id = [NodeId: x], type = INT, init = [NodeConst: INT, 5]], "
                 + "[NodeDecl: id = [NodeId: y], type = FLOAT, init = [NodeConst: FLOAT, 1.5]], "
-                + "[NodeAssign: [NodeId: x] -> [NodeBinOp: [NodeDeref: [NodeId: x]] PLUS [NodeBinOp: [NodeBinOp: [NodeDeref: [NodeId: y]] TIMES [NodeDeref: [NodeId: y]]] PLUS [NodeBinOp: [NodeConst: INT, 4] TIMES [NodeConst: INT, 5]]]]], "
+                + "[NodeAssign: [NodeId: x] -> [NodeBinOp: [NodeBinOp: [NodeDeref: [NodeId: x]] PLUS [NodeBinOp: [NodeDeref: [NodeId: y]] TIMES [NodeDeref: [NodeId: y]]]] PLUS [NodeBinOp: [NodeConst: INT, 4] TIMES [NodeConst: INT, 5]]]], "
                 + "[NodeAssign: [NodeId: y] -> [NodeBinOp: [NodeDeref: [NodeId: y]] DIV [NodeConst: FLOAT, 0.05]]], "
                 + "[NodePrint: [NodeId: y]], "
                 + "[NodeAssign: [NodeId: x] -> [NodeConst: INT, 0]], "
                 + "[NodeAssign: [NodeId: y] -> [NodeBinOp: [NodeBinOp: [NodeConst: FLOAT, 1.5] PLUS [NodeBinOp: [NodeConst: FLOAT, 2.4] DIV [NodeConst: INT, 3]]] PLUS [NodeBinOp: [NodeConst: INT, 4] TIMES [NodeConst: INT, 5]]]], "
-                + "[NodeAssign: [NodeId: x] -> [NodeBinOp: [NodeDeref: [NodeId: x]] MINUS [NodeBinOp: [NodeDeref: [NodeId: y]] PLUS [NodeDeref: [NodeId: y]]]]], "
+                + "[NodeAssign: [NodeId: x] -> [NodeBinOp: [NodeBinOp: [NodeDeref: [NodeId: x]] MINUS [NodeDeref: [NodeId: y]]] PLUS [NodeDeref: [NodeId: y]]]], "
                 + "[NodePrint: [NodeId: x]]]]"
         );
     }
@@ -66,9 +67,10 @@ public class TestAST {
                 + "[[NodeDecl: id = [NodeId: x], type = FLOAT, init = null], "
                 + "[NodeAssign: [NodeId: x] -> [NodeBinOp: [NodeConst: FLOAT, 5.99] PLUS [NodeConst: FLOAT, 0.01]]], "
                 + "[NodeDecl: id = [NodeId: y], type = INT, init = [NodeConst: INT, 3]], "
-                + "[NodeAssign: [NodeId: x] -> [NodeBinOp: [NodeDeref: [NodeId: x]] TIMES [NodeBinOp: [NodeConst: INT, 3] DIV [NodeConst: FLOAT, 4.5]]]], "
+                //+ "[NodeAssign: [NodeId: x] -> [NodeBinOp: [NodeDeref: [NodeId: x]] TIMES [NodeBinOp: [NodeConst: INT, 3] DIV [NodeConst: FLOAT, 4.5]]]], "
                 + "[NodeAssign: [NodeId: x] -> [NodeBinOp: [NodeBinOp: [NodeDeref: [NodeId: x]] TIMES [NodeConst: INT, 3]] DIV [NodeConst: FLOAT, 4.5]]], "
-                + "[NodeAssign: [NodeId: y] -> [NodeBinOp: [NodeDeref: [NodeId: y]] DIV [NodeBinOp: [NodeBinOp: [NodeDeref: [NodeId: x]] PLUS [NodeBinOp: [NodeConst: INT, 11] TIMES [NodeConst: INT, 3]]] PLUS [NodeConst: INT, 5]]]], "
+                + "[NodeAssign: [NodeId: x] -> [NodeBinOp: [NodeBinOp: [NodeDeref: [NodeId: x]] TIMES [NodeConst: INT, 3]] DIV [NodeConst: FLOAT, 4.5]]], "
+                + "[NodeAssign: [NodeId: y] -> [NodeBinOp: [NodeBinOp: [NodeBinOp: [NodeDeref: [NodeId: y]] DIV [NodeDeref: [NodeId: x]]] PLUS [NodeBinOp: [NodeConst: INT, 11] TIMES [NodeConst: INT, 3]]] PLUS [NodeConst: INT, 5]]], "
                 + "[NodePrint: [NodeId: y]], "
                 + "[NodePrint: [NodeId: x]]]]"
         );
@@ -76,6 +78,14 @@ public class TestAST {
 
     @Test
     void testOpAssignEquality() throws FileNotFoundException {
+        testASTBuild("testOpAssignEquality.txt", "[NodeProgram: "
+                + "[[NodeAssign: [NodeId: x] -> [NodeBinOp: [NodeBinOp: [NodeDeref: [NodeId: x]] TIMES [NodeConst: INT, 3]] DIV [NodeConst: FLOAT, 4.5]]], "
+                + "[NodeAssign: [NodeId: x] -> [NodeBinOp: [NodeBinOp: [NodeDeref: [NodeId: x]] TIMES [NodeConst: INT, 3]] DIV [NodeConst: FLOAT, 4.5]]]]]"
+        );
+    }
+
+    @Test
+    void testOpAssignEqualityFiles() throws FileNotFoundException {
         assertEquals(
                 assertDoesNotThrow(() -> parsers.get("testOpAssignEquality_first.txt").parse()).toString(),
                 assertDoesNotThrow(() -> parsers.get("testOpAssignEquality_second.txt").parse()).toString()

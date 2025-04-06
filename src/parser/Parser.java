@@ -5,7 +5,6 @@ import scanner.LexicalException;
 import scanner.*;
 import token.*;
 import java.util.ArrayList;
-import java.util.function.UnaryOperator;
 
 public class Parser {
     private final Scanner sc;
@@ -116,19 +115,9 @@ public class Parser {
             case ID -> {
                 //NodeId id = new NodeId(match(TokenType.ID).getVal());
                 opAssignOper = parseOp();
-                System.out.println("opAssignOper value: " + opAssignOper.getType() + " " + opAssignOper.getLine() + " " + opAssignOper.getVal());
-                if(opAssignOper.getType() != TokenType.ASS) opAssignVal = tk;
+                if(opAssignOper != null) opAssignVal = tk;
                 NodeExpr expr = parseExp();
-                /*
-                if (op.getType() == TokenType.OP_ASS) {
-                    switch (op.getVal()) {
-                        case "+=" -> expr = new NodeBinOp(new NodeDeref(id), LangOper.PLUS, expr);
-                        case "-=" -> expr = new NodeBinOp(new NodeDeref(id), LangOper.MINUS, expr);
-                        case "*=" -> expr = new NodeBinOp(new NodeDeref(id), LangOper.TIMES, expr);
-                        case "/=" -> expr = new NodeBinOp(new NodeDeref(id), LangOper.DIV, expr);
-                    }
-                }
-                */
+
                 match(TokenType.SEMI);
                 return new NodeAssign(new NodeId(tk.getVal()), expr);
             }
@@ -143,38 +132,12 @@ public class Parser {
         }
     }
 
-    private NodeStm parseStm_NICO_VERSION() throws SyntacticException {
-        Token token = anyMatch(TokenType.PRINT, TokenType.ID);
-        if(token.getType() == TokenType.PRINT) {
-            NodePrint node = new NodePrint(new NodeId(match(TokenType.ID).getVal()));
-            match(TokenType.SEMI);
-            return node;
-        }
-        else {
-            if(parseOp().getType() == TokenType.OP_ASS){
-                opAssignOper = new UnaryOperator<Token>() {
-                    @Override
-                    public Token apply(Token tok) {
-                        return switch (tok.getVal()) {
-                            case "+=" -> new Token(TokenType.PLUS, tok.getLine());
-                            case "-=" -> new Token(TokenType.MINUS, tok.getLine());
-                            case "*=" -> new Token(TokenType.TIMES, tok.getLine());
-                            case "/=" -> new Token(TokenType.DIVIDE, tok.getLine());
-                            default -> null;
-                        };
-                    }
-                }.apply(match(TokenType.ASS));
-                if(opAssignOper != null) opAssignVal = token;
-            }
-            NodeExpr expr = parseExp();
-            match(TokenType.SEMI);
-            return new NodeAssign(new NodeId(token.getVal()), expr);
-        }
-    }
-
     private Token parseOp() throws SyntacticException {
-        Token op = anyMatch(TokenType.ASS, TokenType.OP_ASS);
-        if (op.getType() == TokenType.OP_ASS) {
+        Token op = anyMatch(TokenType.OP_ASS, TokenType.ASS);
+
+        System.out.println("parseOp: " + op.getType() + " " + op.getLine() + " " + op.getVal());
+
+        if (op.getType() == TokenType.OP_ASS){
             switch (op.getVal()) {
                 case "+=" -> {
                     return new Token(TokenType.PLUS, op.getLine());
@@ -190,7 +153,7 @@ public class Parser {
                 }
             }
         }
-        return op;
+        return null;
     }
 
     private NodeExpr parseExp() throws SyntacticException {
@@ -270,7 +233,7 @@ public class Parser {
     }
 
     private NodeExpr parseVal() throws SyntacticException {
-        Token tk = anyMatch(TokenType.ID, TokenType.INT, TokenType.FLOAT);
+        Token tk = peekToken();
 
         System.out.println("parseVal: " + tk.getType() + " " + tk.getLine() + " " + tk.getVal());
 

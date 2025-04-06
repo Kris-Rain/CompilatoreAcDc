@@ -11,11 +11,11 @@ class TestToken {
 	@Test
 	void testCostruttore() {
 		Token tk1 = new Token(TokenType.SEMI, 1);
-		Token tk2 = new Token(TokenType.ASS, 2);
+		Token tk2 = new Token(TokenType.OP_ASS, 2, "=");
 
 		assertEquals(TokenType.SEMI, tk1.getType());
 		assertEquals(1, tk1.getLine());
-		assertEquals(TokenType.ASS, tk2.getType());
+		assertEquals(TokenType.OP_ASS, tk2.getType());
 		assertEquals(2, tk2.getLine());
 	}
 

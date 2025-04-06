@@ -9,12 +9,12 @@ public enum TokenType {
 	TYINT,
 	TYFLOAT,
 	ID,
-	ASS,
 	PLUS,
 	MINUS,
 	DIVIDE,
 	TIMES,
 	OP_ASS,
+	ASS,
 	PRINT,
 	SEMI,
 	EOF;
