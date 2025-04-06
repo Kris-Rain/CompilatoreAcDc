@@ -1,48 +1,24 @@
 package parser;
 
 import ast.*;
-import exceptions.LexicalException;
-import exceptions.SyntacticException;
+import scanner.LexicalException;
 import scanner.*;
 import token.*;
 import java.util.ArrayList;
+import java.util.function.UnaryOperator;
 
 public class Parser {
     private final Scanner sc;
+    private Token opAssignOper;
+    private Token opAssignVal;
 
     public Parser(Scanner scanner) {
         this.sc = scanner;
+        opAssignOper = opAssignVal = null;
     }
 
-    private Token match(TokenType type) throws SyntacticException {
-        try {
-            Token tk = sc.peekToken();
-            if (type.equals(tk.getType())) return sc.nextToken();
-            else throw new SyntacticException(tk.getLine(), type.toString(), tk.getType());
-        } catch (LexicalException e) {
-            throw new SyntacticException("Lexical Exception: " + e.getMessage());
-        }
-    }
-
-    private Token anyMatch(TokenType firstType, TokenType... types) throws SyntacticException {
-        try {
-            Token tk = sc.peekToken();
-            if (firstType.equals(tk.getType())) return sc.nextToken();
-            for (TokenType type : types) {
-                if (type.equals(tk.getType())) return sc.nextToken();
-            }
-            throw new SyntacticException(tk.getLine(), firstType + " or " + TokenType.toStringEach(types), tk.getType());
-        } catch (LexicalException e) {
-            throw new SyntacticException("Lexical Exception: " + e.getMessage());
-        }
-    }
-
-    private Token peekToken() throws SyntacticException {
-        try {
-            return sc.peekToken();
-        } catch (LexicalException e) {
-            throw new SyntacticException("Lexical Exception: " + e.getMessage());
-        }
+    public NodeProgram parse() throws SyntacticException {
+        return this.parsePrg();
     }
 
     private NodeProgram parsePrg() throws SyntacticException {
@@ -131,18 +107,20 @@ public class Parser {
     }
 
     private NodeStm parseStm() throws SyntacticException {
-        Token tk = peekToken();
+        Token tk = anyMatch(TokenType.ID, TokenType.PRINT);
 
         System.out.println("parseStm: " + tk.getType() + " " + tk.getLine() + " " + tk.getVal());
 
         switch (tk.getType()) {
             //Stm -> id Op Exp ;
             case ID -> {
-                NodeId id = new NodeId(match(TokenType.ID).getVal());
-                Token op = parseOp();
+                //NodeId id = new NodeId(match(TokenType.ID).getVal());
+                opAssignOper = parseOp();
+                System.out.println("opAssignOper value: " + opAssignOper.getType() + " " + opAssignOper.getLine() + " " + opAssignOper.getVal());
+                if(opAssignOper.getType() != TokenType.ASS) opAssignVal = tk;
                 NodeExpr expr = parseExp();
-                //System.out.println("Token OP Val: " + op.getVal());
-                if(op.getType() == TokenType.OP_ASS) {
+                /*
+                if (op.getType() == TokenType.OP_ASS) {
                     switch (op.getVal()) {
                         case "+=" -> expr = new NodeBinOp(new NodeDeref(id), LangOper.PLUS, expr);
                         case "-=" -> expr = new NodeBinOp(new NodeDeref(id), LangOper.MINUS, expr);
@@ -150,12 +128,13 @@ public class Parser {
                         case "/=" -> expr = new NodeBinOp(new NodeDeref(id), LangOper.DIV, expr);
                     }
                 }
+                */
                 match(TokenType.SEMI);
-                return new NodeAssign(id, expr);
+                return new NodeAssign(new NodeId(tk.getVal()), expr);
             }
             //Stm -> print id ;
             case PRINT -> {
-                match(TokenType.PRINT);
+                //match(TokenType.PRINT);
                 NodePrint nodePrint = new NodePrint(new NodeId(match(TokenType.ID).getVal()));
                 match(TokenType.SEMI);
                 return nodePrint;
@@ -164,8 +143,54 @@ public class Parser {
         }
     }
 
+    private NodeStm parseStm_NICO_VERSION() throws SyntacticException {
+        Token token = anyMatch(TokenType.PRINT, TokenType.ID);
+        if(token.getType() == TokenType.PRINT) {
+            NodePrint node = new NodePrint(new NodeId(match(TokenType.ID).getVal()));
+            match(TokenType.SEMI);
+            return node;
+        }
+        else {
+            if(parseOp().getType() == TokenType.OP_ASS){
+                opAssignOper = new UnaryOperator<Token>() {
+                    @Override
+                    public Token apply(Token tok) {
+                        return switch (tok.getVal()) {
+                            case "+=" -> new Token(TokenType.PLUS, tok.getLine());
+                            case "-=" -> new Token(TokenType.MINUS, tok.getLine());
+                            case "*=" -> new Token(TokenType.TIMES, tok.getLine());
+                            case "/=" -> new Token(TokenType.DIVIDE, tok.getLine());
+                            default -> null;
+                        };
+                    }
+                }.apply(match(TokenType.ASS));
+                if(opAssignOper != null) opAssignVal = token;
+            }
+            NodeExpr expr = parseExp();
+            match(TokenType.SEMI);
+            return new NodeAssign(new NodeId(token.getVal()), expr);
+        }
+    }
+
     private Token parseOp() throws SyntacticException {
-        return anyMatch(TokenType.ASS, TokenType.OP_ASS);
+        Token op = anyMatch(TokenType.ASS, TokenType.OP_ASS);
+        if (op.getType() == TokenType.OP_ASS) {
+            switch (op.getVal()) {
+                case "+=" -> {
+                    return new Token(TokenType.PLUS, op.getLine());
+                }
+                case "-=" -> {
+                    return new Token(TokenType.MINUS, op.getLine());
+                }
+                case "*=" -> {
+                    return new Token(TokenType.TIMES, op.getLine());
+                }
+                case "/=" -> {
+                    return new Token(TokenType.DIVIDE, op.getLine());
+                }
+            }
+        }
+        return op;
     }
 
     private NodeExpr parseExp() throws SyntacticException {
@@ -245,7 +270,7 @@ public class Parser {
     }
 
     private NodeExpr parseVal() throws SyntacticException {
-        Token tk = peekToken();
+        Token tk = anyMatch(TokenType.ID, TokenType.INT, TokenType.FLOAT);
 
         System.out.println("parseVal: " + tk.getType() + " " + tk.getLine() + " " + tk.getVal());
 
@@ -253,7 +278,7 @@ public class Parser {
             //Val -> TYINT, Val -> TYFLOAT
             case INT, FLOAT -> {
                 match(tk.getType());
-                return new NodeConst(tk.getVal(), tk.getType() == TokenType.TYINT ? LangType.INT : LangType.FLOAT);
+                return new NodeConst(tk.getVal(), tk.getType() == TokenType.INT ? LangType.INT : LangType.FLOAT);
             }
             //Val -> id
             case ID -> {
@@ -263,7 +288,58 @@ public class Parser {
         }
     }
 
-    public NodeProgram parse() throws SyntacticException {
-        return this.parsePrg();
+    private Token match(TokenType type) throws SyntacticException {
+        Token tk = peekToken();
+
+        System.out.println("match: " + tk.getType() + " " + tk.getLine() + " " + tk.getVal());
+
+        if (type.equals(tk.getType())) return nextToken();
+        else throw new SyntacticException(tk.getLine(), type.toString(), tk.getType());
+    }
+
+    private Token anyMatch(TokenType firstType, TokenType... types) throws SyntacticException {
+        Token tk = peekToken();
+
+        System.out.println("anyMatch: " + tk.getType() + " " + tk.getLine() + " " + tk.getVal());
+
+        if (firstType.equals(tk.getType())) return nextToken();
+        for (TokenType type : types) {
+            if (type.equals(tk.getType())) return nextToken();
+        }
+        throw new SyntacticException(tk.getLine(), firstType + " or " + TokenType.toStringEach(types), tk.getType());
+    }
+
+    private Token peekToken() throws SyntacticException {
+        Token token;
+        if(opAssignVal != null) token = opAssignVal;
+        else if(opAssignOper != null) token = opAssignOper;
+        else {
+            try {
+                token = sc.peekToken();
+            } catch(LexicalException e) {
+                throw new SyntacticException(e.getMessage(), e);
+            }
+        }
+        return token;
+    }
+
+    private Token nextToken() throws SyntacticException {
+        Token token;
+        if(opAssignVal != null) {
+            token = opAssignVal;
+            opAssignVal = null;
+        }
+        else if(opAssignOper != null) {
+            token = opAssignOper;
+            opAssignOper = null;
+        }
+        else {
+            try {
+                return sc.nextToken();
+            } catch (LexicalException e) {
+                throw new SyntacticException(e.getMessage(), e);
+            }
+        }
+        return token;
     }
 }

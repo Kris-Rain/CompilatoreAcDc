@@ -13,6 +13,6 @@ public class NodeId extends NodeAST {
 
     @Override
     public String toString() {
-        return "[NodeId: " + id + ']';
+        return "[NodeId: " + this.id + ']';
     }
 }

@@ -1,0 +1,8 @@
+float x;
+x = 5.99 + 0.01;
+int y = 3;
+x *= 3 / 4.5;
+x = x * 3 / 4.5;
+y /= x + 11 * 3 + 5;
+print y;
+print x;

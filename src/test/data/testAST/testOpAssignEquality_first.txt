@@ -1,0 +1,12 @@
+int x = 5;
+float y = 6.7;
+print x;
+y = y + y * 4;
+x = x / 3 + 8.5 - 2;
+print x;
+print y;
+y = y / 3 + 4;
+x = x - 3 + 4;
+int z = 2;
+z = z*z;
+print z;

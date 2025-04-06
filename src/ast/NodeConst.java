@@ -19,6 +19,6 @@ public class NodeConst extends NodeExpr {
 
     @Override
     public String toString() {
-        return "[NodeConst: " + type + ", " + value + ']';
+        return "[NodeConst: " + this.type + ", " + this.value + ']';
     }
 }

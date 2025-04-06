@@ -13,6 +13,6 @@ public class NodePrint extends NodeStm {
 
     @Override
     public String toString() {
-        return "[NodePrint: " + id + ']';
+        return "[NodePrint: " + this.id + ']';
     }
 }

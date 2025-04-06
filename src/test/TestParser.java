@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import parser.Parser;
-import exceptions.SyntacticException;
+import parser.SyntacticException;
 import scanner.Scanner;
 import java.io.FileNotFoundException;
 import java.util.HashMap;

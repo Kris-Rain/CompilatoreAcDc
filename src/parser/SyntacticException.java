@@ -1,4 +1,4 @@
-package exceptions;
+package parser;
 
 import token.TokenType;
 
@@ -10,4 +10,8 @@ public class SyntacticException extends RuntimeException {
   public SyntacticException(String message) {
     super(message);
   }
+
+    public SyntacticException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

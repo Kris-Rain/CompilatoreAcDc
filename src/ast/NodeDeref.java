@@ -13,6 +13,6 @@ public class NodeDeref extends NodeExpr {
 
     @Override
     public String toString() {
-        return "[NodeDeref: " + id + ']';
+        return "[NodeDeref: " + this.id + ']';
     }
 }

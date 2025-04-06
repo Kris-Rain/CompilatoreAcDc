@@ -7,7 +7,6 @@ import java.io.PushbackReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import exceptions.LexicalException;
 import token.*;
 
 public class Scanner {
@@ -133,6 +132,7 @@ public class Scanner {
         System.out.println("Current char (op or delim): " + nextCharTemp);
         if(nextCharTemp != '=' && nextCharTemp != ';'){
             if(peekChar() == '='){
+				System.out.println("Current char (op_ass): " + peekChar());
                 readChar();
                 return new Token(TokenType.OP_ASS, line,nextCharTemp + "=");
             }

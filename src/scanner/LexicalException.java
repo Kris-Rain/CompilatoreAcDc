@@ -1,4 +1,4 @@
-package exceptions;
+package scanner;
 
 public class LexicalException extends Exception {
 
