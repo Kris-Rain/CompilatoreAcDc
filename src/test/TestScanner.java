@@ -13,8 +13,7 @@ import java.util.HashMap;
 
 class TestScanner {
 	private final HashMap<String, Scanner> scanners = new HashMap<>();
-	private final String filePath = "src/test/data/testScanner/";
-	private final String[] testFiles = new String[] {
+    private final String[] testFiles = new String[] {
 			"testEOF.txt",
 			"testOpsDels.txt",
 			"testKeywords.txt",
@@ -31,6 +30,7 @@ class TestScanner {
 	@BeforeEach
 	public void setUpScanners() throws FileNotFoundException {
         for (String testFile : testFiles) {
+            String filePath = "src/test/data/testScanner/";
             scanners.put(testFile, new Scanner(filePath + testFile));
         }
 	}
@@ -91,7 +91,7 @@ class TestScanner {
 	void testId() throws LexicalException {
 		Scanner scanner = scanners.get("testId.txt");
 
-		assertEquals("jskjdsfhkjdshkf", scanner.nextToken().getVal());
+		assertEquals("jskjdsf97hkjdshkf", scanner.nextToken().getVal());
 		assertEquals("printl", scanner.nextToken().getVal());
 		assertEquals("ffloat", scanner.nextToken().getVal());
 		assertEquals("hhhjj", scanner.nextToken().getVal());
@@ -187,9 +187,19 @@ class TestScanner {
 		assertEquals("0", scanner.nextToken().getVal());
 		assertEquals("33", scanner.nextToken().getVal());
 		LexicalException e = Assertions.assertThrows(LexicalException.class, scanner::nextToken);
-		assertEquals("Lexical error at line 3: character sequence " + "'123.121212'" + " not recognized", e.getMessage());
+		assertEquals("Lexical error at line 3: character sequence '123.121212' not recognized", e.getMessage());
 		e = Assertions.assertThrows(LexicalException.class, scanner::nextToken);
-		assertEquals("Lexical error at line 5: character sequence " + "'123.123.123'" + " not recognized", e.getMessage());
+		assertEquals("Lexical error at line 5: character sequence '123.123.123' not recognized", e.getMessage());
+		e = Assertions.assertThrows(LexicalException.class, scanner::nextToken);
+		assertEquals("Lexical error at line 7: character sequence '123a' not recognized", e.getMessage());
+		e = Assertions.assertThrows(LexicalException.class, scanner::nextToken);
+		assertEquals("Lexical error at line 7: character sequence '00c' not recognized", e.getMessage());
+		e = Assertions.assertThrows(LexicalException.class, scanner::nextToken);
+		assertEquals("Lexical error at line 8: character sequence '12.a' not recognized", e.getMessage());
+		e = Assertions.assertThrows(LexicalException.class, scanner::nextToken);
+		assertEquals("Lexical error at line 8: character sequence '12.03b' not recognized", e.getMessage());
+		e = Assertions.assertThrows(LexicalException.class, scanner::nextToken);
+		assertEquals("Lexical error at line 10: unexpected character '.' not accepted", e.getMessage());
 	}
 }
 

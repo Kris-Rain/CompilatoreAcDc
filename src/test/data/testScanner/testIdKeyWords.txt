@@ -3,4 +3,4 @@ float
 print
 nome
 intnome
-int nome
+int nome4

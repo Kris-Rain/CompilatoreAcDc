@@ -6,7 +6,6 @@ import parser.Parser;
 import scanner.Scanner;
 import java.util.HashMap;
 import java.io.FileNotFoundException;
-
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -25,8 +24,7 @@ public class TestAST {
     @BeforeEach
     void setUpParsers() throws FileNotFoundException {
         String filePath = "src/test/data/testAST/";
-        for (int i = 0; i < testFiles.length; i++)
-            parsers.put(testFiles[i], new Parser(new Scanner(filePath + testFiles[i])));
+        for (String testFile : testFiles) parsers.put(testFile, new Parser(new Scanner(filePath + testFile)));
     }
 
     @Test

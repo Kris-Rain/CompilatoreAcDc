@@ -1,5 +1,7 @@
 package ast;
 
+import visitor.IVisitor;
+
 public class NodeConst extends NodeExpr {
     private String value;
     private LangType type;
@@ -20,5 +22,13 @@ public class NodeConst extends NodeExpr {
     @Override
     public String toString() {
         return "[NodeConst: " + this.type + ", " + this.value + ']';
+    }
+
+    /**
+     * @param visitor
+     */
+    @Override
+    public void accept(IVisitor visitor) {
+        visitor.visit(this);
     }
 }

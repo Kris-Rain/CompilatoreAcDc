@@ -1,0 +1,6 @@
+float pippo = 12.5;
+int pluto = 2;
+float div = 12.5 / pluto;
+print div;
+pippo += pluto * 2;
+print pippo;

@@ -117,7 +117,8 @@ public class Scanner {
 
 	private Token scanId() throws LexicalException {
 		StringBuilder id = new StringBuilder();
-        while (letters.contains(nextChar = peekChar())){
+
+        while (letters.contains(nextChar = peekChar()) || digits.contains(nextChar)) {
             System.out.println("Current char (id): " + nextChar);
             id.append(readChar());
         }
@@ -143,26 +144,44 @@ public class Scanner {
 		
 	private Token scanNumber() throws LexicalException {
 		StringBuilder val = new StringBuilder();
-		boolean doublePointed = false;
-		int count = 0;
+		boolean isLetter = false;
 
-        while (digits.contains(nextChar = peekChar()) || nextChar == '.'){
+        while (digits.contains(nextChar) || letters.contains(nextChar)) {
 			System.out.println("Current char (digit): " + nextChar);
+			if (letters.contains(nextChar)) isLetter = true;
             val.append(readChar());
+			System.out.println("Val: " + val);
+			nextChar = peekChar();
         }
 
-        int decimalPoint = String.valueOf(val).indexOf('.');
+        if(nextChar == '.') {
+			val.append(readChar());
+			System.out.println("Val: " + val);
+			return scanFloat(val);
+		}
 
-        if(decimalPoint != -1){
-            for(int i = val.indexOf(".") + 1; i < val.length(); i++){
-                if(val.charAt(i) == '.') doublePointed = true;
-                count++;
-            }
-            if(doublePointed || count > 5) throw new LexicalException(this.line, String.valueOf(val));
-            return new Token(TokenType.FLOAT, line, val.toString());
-        }
-        else return new Token(TokenType.INT, line, val.toString());
+        if(!isLetter) return new Token(TokenType.INT, line, val.toString());
+		throw new LexicalException(this.line, val.toString());
     }
+
+	private Token scanFloat(StringBuilder val) throws LexicalException {
+		int count = 0;
+		boolean tooManyPoints = false, isLetter = false;
+		nextChar = peekChar();
+
+		while (digits.contains(nextChar) || nextChar == '.' || letters.contains(nextChar)) {
+			System.out.println("Current char (float): " + nextChar);
+			if (nextChar == '.') tooManyPoints = true;
+			if (letters.contains(nextChar)) isLetter = true;
+			val.append(readChar());
+			System.out.println("Val: " + val + " count: " + count);
+			nextChar = peekChar();
+			count++;
+		}
+
+		if((count <= 5 && !tooManyPoints && !isLetter)) return new Token(TokenType.FLOAT, line, val.toString());
+		throw new LexicalException(this.line, val.toString());
+	}
 
 	private char readChar() throws LexicalException  {
 		try {

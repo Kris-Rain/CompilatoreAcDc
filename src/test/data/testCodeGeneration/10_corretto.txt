@@ -1,0 +1,11 @@
+float pippo = 3*4 + 2.5;
+int pluto;
+print pippo;
+pippo = pluto;
+print pippo;
+int x = 5;
+pippo += x*x;
+pippo /= 2;
+print pippo;
+print x;
+

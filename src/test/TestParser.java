@@ -12,15 +12,15 @@ import java.util.HashMap;
 class TestParser {
     private final HashMap<String, Parser> parsers = new HashMap<>();
     private final String[] testFiles = new String[] {
-            "testNico/programma_vuoto.txt",
+            "programma_vuoto.txt",
             "testSoloDich.txt",
             "testSoloDichPrint.txt",
-            "testNico/testSoloDichPrint1.txt",
-            "testNico/testSoloDichPrintEcc1.txt",
-            "testNico/testSoloDichPrintEcc2.txt",
+            "testSoloDichPrint1.txt",
+            "testSoloDichPrintEcc1.txt",
+            "testSoloDichPrintEcc2.txt",
             "testParserCorretto1.txt",
             "testParserCorretto2.txt",
-            "testNico/testParserCorretto3.txt",
+            "testParserCorretto3.txt",
             "testParserEcc_0.txt",
             "testParserEcc_1.txt",
             "testParserEcc_2.txt",
@@ -29,8 +29,8 @@ class TestParser {
             "testParserEcc_5.txt",
             "testParserEcc_6.txt",
             "testParserEcc_7.txt",
-            "testNico/testParserEcc_8.txt",
-            "testNico/testParserEcc_9.txt"
+            "testParserEcc_8.txt",
+            "testParserEcc_9.txt"
     };
 
     @BeforeEach
@@ -43,13 +43,13 @@ class TestParser {
 
     @Test
     void testProgrammaVuoto() {
-        Parser parser = parsers.get("testNico/programma_vuoto.txt");
+        Parser parser = parsers.get("programma_vuoto.txt");
         assertDoesNotThrow(parser::parse);
     }
 
     @Test
     void testParserCorretti() {
-        String[] files = new String[] { "testParserCorretto1.txt", "testParserCorretto2.txt", "testNico/testParserCorretto3.txt" };
+        String[] files = new String[] { "testParserCorretto1.txt", "testParserCorretto2.txt", "testParserCorretto3.txt" };
         for(String file : files)
             assertDoesNotThrow(() -> parsers.get(file).parse());
     }
@@ -68,13 +68,13 @@ class TestParser {
 
     @Test
     void testSoloDichPrint1() {
-        Parser parser = parsers.get("testNico/testSoloDichPrint1.txt");
+        Parser parser = parsers.get("testSoloDichPrint1.txt");
         assertDoesNotThrow(parser::parse);
     }
 
     @Test
     void testSoloDichPrintEcc1() {
-        Parser parser = parsers.get("testNico/testSoloDichPrintEcc1.txt");
+        Parser parser = parsers.get("testSoloDichPrintEcc1.txt");
 
         SyntacticException e = assertThrows(SyntacticException.class, parser::parse);
         assertEquals("Expected OP_ASS or ASS but found SEMI at line 3", e.getMessage());
@@ -82,7 +82,7 @@ class TestParser {
 
     @Test
     void testSoloDichPrintEcc2() {
-        Parser parser = parsers.get("testNico/testSoloDichPrintEcc2.txt");
+        Parser parser = parsers.get("testSoloDichPrintEcc2.txt");
 
         SyntacticException e = assertThrows(SyntacticException.class, parser::parse);
         assertEquals("Expected SEMI or ASS but found PRINT at line 3", e.getMessage());
@@ -154,7 +154,7 @@ class TestParser {
 
     @Test
     void testParseEcc8() {
-        Parser parser = parsers.get("testNico/testParserEcc_8.txt");
+        Parser parser = parsers.get("testParserEcc_8.txt");
 
         SyntacticException e = assertThrows(SyntacticException.class, parser::parse);
         assertEquals("Expected SEMI or ASS but found OP_ASS at line 3", e.getMessage());
@@ -162,7 +162,7 @@ class TestParser {
 
     @Test
     void testParseEcc9() {
-        Parser parser = parsers.get("testNico/testParserEcc_9.txt");
+        Parser parser = parsers.get("testParserEcc_9.txt");
 
         SyntacticException e = assertThrows(SyntacticException.class, parser::parse);
         assertEquals("Expected SEMI or ASS but found ID at line 4", e.getMessage());

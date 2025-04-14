@@ -3,7 +3,7 @@ package scanner;
 public class LexicalException extends Exception {
 
     public LexicalException(int line, char c) {
-        super("Lexical error at line " + line + ": unexpected character '" + c + "'");
+        super("Lexical error at line " + line + ": unexpected character '" + c + "' not accepted");
     }
 
     public LexicalException(int line, String seq) {

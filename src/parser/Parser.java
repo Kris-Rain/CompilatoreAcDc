@@ -16,9 +16,7 @@ public class Parser {
         opAssignOper = opAssignVal = null;
     }
 
-    public NodeProgram parse() throws SyntacticException {
-        return this.parsePrg();
-    }
+    public NodeProgram parse() throws SyntacticException { return this.parsePrg(); }
 
     private NodeProgram parsePrg() throws SyntacticException {
         Token tk = peekToken();
@@ -106,24 +104,23 @@ public class Parser {
     }
 
     private NodeStm parseStm() throws SyntacticException {
-        Token tk = anyMatch(TokenType.ID, TokenType.PRINT);
+        Token tk = peekToken();
 
         System.out.println("parseStm: " + tk.getType() + " " + tk.getLine() + " " + tk.getVal());
 
         switch (tk.getType()) {
             //Stm -> id Op Exp ;
             case ID -> {
-                //NodeId id = new NodeId(match(TokenType.ID).getVal());
+                NodeId id = new NodeId(match(TokenType.ID).getVal());
                 opAssignOper = parseOp();
                 if(opAssignOper != null) opAssignVal = tk;
                 NodeExpr expr = parseExp();
-
                 match(TokenType.SEMI);
-                return new NodeAssign(new NodeId(tk.getVal()), expr);
+                return new NodeAssign(id, expr);
             }
             //Stm -> print id ;
             case PRINT -> {
-                //match(TokenType.PRINT);
+                match(TokenType.PRINT);
                 NodePrint nodePrint = new NodePrint(new NodeId(match(TokenType.ID).getVal()));
                 match(TokenType.SEMI);
                 return nodePrint;
