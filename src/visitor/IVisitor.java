@@ -2,6 +2,17 @@ package visitor;
 
 import ast.*;
 
+/**
+ * {@code IVisitor} è l'interfaccia per il pattern <em>visitor</em>.
+ * <p>Questa interfaccia contiene un metodo {@code visit} per ogni tipo di nodo concreto dell'AST.
+ * <br>Il metodo {@link NodeAST#accept} di ogni nodo concreto dell'AST chiama il metodo {@code visit} corrispondente dell'interfaccia {@code IVisitor}.</p>
+ * <p>Questa interfaccia è implementata dalla classe {@link TypeCheckingVisitor} e {@link CodeGenerationVisitor}.</p>
+ *
+ * @see TypeCheckingVisitor
+ * @see CodeGenerationVisitor
+ * @see NodeAST
+ * @author Kristian Rigo (matr. 20046665)
+ */
 public interface IVisitor {
 
     /**

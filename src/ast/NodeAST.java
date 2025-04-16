@@ -2,7 +2,7 @@ package ast;
 
 import visitor.IVisitor;
 
-abstract class NodeAST {
+public abstract class NodeAST {
 
     /**
      * Ritorna il nodo {@link NodeId} assegnato a questo nodo. Se il nodo non {@code NodeId} associati, ritorna {@code null}.
