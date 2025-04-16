@@ -1,25 +1,27 @@
 package visitor;
 
 import ast.*;
-import symbolTable.SymbolTable;
-import token.TokenType;
 
-import javax.management.Attribute;
-
+/**
+ * La classe {@code CodeGenerationVisitor} realizza l'interfaccia {@link IVisitor} ed è responsabile della generazione del codice.
+ * <p>Questa classe attraversa l'AST e produce il codice <em>dc</em> corrispondente al linguaggio <em>ac</em> analizzato.</p>
+ * <p>Prima di utilizzare questa classe, è necessario che l'AST sia stato verificato semanticamente tramite {@link TypeCheckingVisitor}.</p>
+ *
+ * @see IVisitor
+ * @see TypeCheckingVisitor
+ * @author Kristian Rigo (matr. 20046665)
+ */
 public class CodeGenerationVisitor implements IVisitor {
     private String codiceDc;
     private String log;
 
     /**
-     * Crea un nuovo {@link CodeGenerationVisitor}, inizializzando il codice <em>dc</em> e il log a stringhe vuote.
+     * Crea un nuovo {@link CodeGenerationVisitor}, inizializzando il codice <em>dc</em> e il log come stringhe vuote.
      */
     public CodeGenerationVisitor() {
         codiceDc = log = "";
     }
 
-    /**
-     * @param nodePrg
-     */
     @Override
     public void visit(NodeProgram nodePrg) {
         StringBuilder codeBuild = new StringBuilder();
@@ -32,9 +34,6 @@ public class CodeGenerationVisitor implements IVisitor {
         codiceDc = codeBuild.toString().strip();
     }
 
-    /**
-     * @param nodeDecl
-     */
     @Override
     public void visit(NodeDecl nodeDecl) {
         if(nodeDecl.getId().getRegister() == (char) -1) log = "Register not available for identifier <" + nodeDecl.getId().getIdName() + ">";
@@ -45,20 +44,13 @@ public class CodeGenerationVisitor implements IVisitor {
         System.out.println("NodeDecl: " + nodeDecl.getId().getIdName() + ", Register: " + nodeDecl.getId().getRegister() + ", Type: " + nodeDecl.getType() + ", CodiceDc: " + codiceDc);
     }
 
-    /**
-     * @param nodeId
-     */
     @Override
     public void visit(NodeId nodeId) {
-        SymbolTable.Attribute entry = SymbolTable.lookup(nodeId.getIdName());
         codiceDc = "l" + nodeId.getRegister() + " ";
 
-        System.out.println("NodeId: idName: " + nodeId.getIdName() + ", Register: " + nodeId.getRegister() + ", Type: " + entry.getType());
+        System.out.println("NodeId: idName: " + nodeId.getIdName() + ", Register: " + nodeId.getRegister() + ", CodiceDc: " + codiceDc);
     }
 
-    /**
-     * @param nodeBinOp
-     */
     @Override
     public void visit(NodeBinOp nodeBinOp) {
         nodeBinOp.getLeft().accept(this);
@@ -72,9 +64,6 @@ public class CodeGenerationVisitor implements IVisitor {
         System.out.println("NodeBinOp: LeftCode -> " + leftCode + ", RightCode -> " + rightCode + ", Op -> " + nodeBinOp.getOp() + ", CodiceDc -> " + codiceDc);
     }
 
-    /**
-     * @param nodeAssign
-     */
     @Override
     public void visit(NodeAssign nodeAssign) {
         nodeAssign.getExpr().accept(this);
@@ -84,38 +73,29 @@ public class CodeGenerationVisitor implements IVisitor {
         System.out.println("NodeAssign: " + nodeAssign.getId().getIdName() + ", Register: " + nodeAssign.getId().getRegister() + ", CodiceDc -> " + codiceDc);
     }
 
-    /**
-     * @param nodeConst
-     */
     @Override
     public void visit(NodeConst nodeConst) { codiceDc = nodeConst.getValue() + " "; }
 
-    /**
-     * @param nodeDeref
-     */
     @Override
     public void visit(NodeDeref nodeDeref) { nodeDeref.getId().accept(this); }
 
-    /**
-     * @param nodePrint
-     */
     @Override
     public void visit(NodePrint nodePrint) { codiceDc = "l" + nodePrint.getId().getRegister() + " p P "; }
 
     /**
-     * Ritorna il codice <em>dc</em> generato con la visita dell'AST.
+     * Restituisce il codice <em>dc</em> generato durante la visita dell'AST.
      *
-     * @return il codice <em>dc</em> generato
+     * @return Il codice <em>dc</em> generato.
      */
     public String getCode() {
         return codiceDc;
     }
 
     /**
-     * Ritorna il log degli errori generati durante la visita dell'AST. Un log vuoto
-     * indica che non sono stati generati errori.
+     * Restituisce il log degli errori rilevati durante la visita dell'AST.
+     * Se il log è vuoto, non sono stati rilevati errori.
      *
-     * @return il log degli errori generati
+     * @return Il log degli errori rilevati.
      */
     public String getLog() {
         return log;

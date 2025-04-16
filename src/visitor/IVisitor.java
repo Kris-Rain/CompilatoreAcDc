@@ -4,19 +4,67 @@ import ast.*;
 
 public interface IVisitor {
 
-    void visit(NodeProgram node);
+    /**
+     * Visita il nodo {@link NodeProgram} e ne esegue l'analisi semantica o la
+     * generazione del codice, a seconda dell'implementazione.
+     *
+     * @param nodePrg il nodo {@code NodeProgram} da visitare
+     */
+    void visit(NodeProgram nodePrg);
 
-    void visit(NodeDecl node);
+    /**
+     * Visita il nodo {@link NodeAssign} e ne esegue l'analisi semantica o la
+     * generazione del codice, a seconda dell'implementazione.
+     *
+     * @param nodeDecl il nodo {@code NodeDecl} da visitare
+     */
+    void visit(NodeDecl nodeDecl);
 
-    void visit(NodeId node);
+    /**
+     * Visita il nodo {@link NodeId} e ne esegue l'analisi semantica o la
+     * generazione del codice, a seconda dell'implementazione.
+     *
+     * @param nodeId il nodo {@code NodeId} da visitare
+     */
+    void visit(NodeId nodeId);
 
-    void visit(NodeBinOp node);
+    /**
+     * Visita il nodo {@link NodeBinOp} e ne esegue l'analisi semantica o la
+     * generazione del codice, a seconda dell'implementazione.
+     *
+     * @param nodeBinOp il nodo {@code NodeBinOp} da visitare
+     */
+    void visit(NodeBinOp nodeBinOp);
 
-    void visit(NodeAssign node);
+    /**
+     * Visita il nodo {@link NodeAssign} e ne esegue l'analisi semantica o la
+     * generazione del codice, a seconda dell'implementazione.
+     *
+     * @param nodeAssign il nodo {@code NodeAssign} da visitare
+     */
+    void visit(NodeAssign nodeAssign);
 
-    void visit(NodeConst node);
+    /**
+     * Visita il nodo {@link NodeConst} e ne esegue l'analisi semantica o la
+     * generazione del codice, a seconda dell'implementazione.
+     *
+     * @param nodeConst il nodo {@code NodeConst} da visitare
+     */
+    void visit(NodeConst nodeConst);
 
-    void visit(NodeDeref node);
+    /**
+     * Visita il nodo {@link NodeDeref} e ne esegue l'analisi semantica o la
+     * generazione del codice, a seconda dell'implementazione.
+     *
+     * @param nodeDeref il nodo {@code NodeDeref} da visitare
+     */
+    void visit(NodeDeref nodeDeref);
 
-    void visit(NodePrint node);
+    /**
+     * Visita il nodo {@link NodePrint} e ne esegue l'analisi semantica o la
+     * generazione del codice, a seconda dell'implementazione.
+     *
+     * @param nodePrint il nodo {@code NodePrint} da visitare
+     */
+    void visit(NodePrint nodePrint);
 }

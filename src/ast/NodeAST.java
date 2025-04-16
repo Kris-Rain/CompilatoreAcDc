@@ -7,8 +7,8 @@ public abstract class NodeAST {
     /**
      * Ritorna il nodo {@link NodeId} assegnato a questo nodo. Se il nodo non {@code NodeId} associati, ritorna {@code null}.
      *
-     * @return il {@code NodeId} assegnato a questo nodo
-     * @throws UnsupportedOperationException se il nodo non prevede associazioni con nodi di classe {@code NodeId}
+     * @return Il {@code NodeId} assegnato a questo nodo.
+     * @throws UnsupportedOperationException se il nodo non prevede associazioni con nodi di classe {@code NodeId}.
      */
     public NodeId getId() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Operazione non supportata");
@@ -17,26 +17,29 @@ public abstract class NodeAST {
     /**
      * Ritorna il tipo {@link LangType} di questo nodo.
      *
-     * @return il {@code LangType} associato a questo nodo
-     * @throws UnsupportedOperationException se il nodo non prevede un {@code LangType}
+     * @return Il {@code LangType} associato a questo nodo.
+     * @throws UnsupportedOperationException se il nodo non prevede un {@code LangType}.
      */
     public LangType getType() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Operazione non supportata");
     }
 
     /**
-     * Metodo che accetta un visitatore.
-     * <p>Questo metodo permette di visitare il nodo corrente tramite un visitatore specifico.</p>
+     * Metodo che accetta un {@link IVisitor} e invoca il metodo {@code visit} corrispondente a questo nodo.
      *
-     * @param visitor il visitatore da accettare
+     * @param visitor Il {@link IVisitor} da accettare per visitare questo nodo.
      */
     public abstract void accept(IVisitor visitor);
 
     /**
-     * Metodo che restituisce una rappresentazione in formato stringa del nodo.
-     * <p>Questo metodo permette di ottenere una rappresentazione testuale del nodo corrente.</p>
+     * Metodo che restituisce una rappresentazione in formato {@code String} del nodo.
+     * La stringa ritornata è nel formato {@code [<TipoNodo>: <Attributi>]}, dove:
+     * <ul>
+     *    <li>{@code <TipoNodo>} è il tipo di questo nodo dell'AST;</li>
+     *    <li>{@code <Attributi>} sono gli attributi di questo nodo, come il nome, il {@code LangType} o eventuali nodi figli.</li>
+     * </ul>
      *
-     * @return la rappresentazione in formato stringa del nodo
+     * @return La rappresentazione in formato {@code String} di questo nodo.
      */
     @Override
     public abstract String toString();

@@ -6,25 +6,57 @@ import scanner.*;
 import token.*;
 import java.util.ArrayList;
 
+/**
+ * Classe responsabile del parsing del linguaggio <em>ac</em>, implementata come un parser top-down a discesa ricorsiva.
+ * Riguarda dunque l'analisi sintattica del linguaggio.
+ * <p>La classe {@code Parser} utilizza uno {@link Scanner} per ottenere i token uno alla volta e costruire l'AST del programma.</p>
+ * <p>In caso di errori sintattici, viene lanciata un'eccezione di tipo {@link SyntacticException} con un messaggio descrittivo.</p>
+ *
+ * @see Scanner
+ * @see SyntacticException
+ * @see NodeProgram
+ * @see Token
+ * @author Kristian Rigo (matr. 20046665)
+ */
 public class Parser {
     private final Scanner sc;
     private Token opAssignOper;
     private Token opAssignVal;
 
+    /**
+     * Costruisce un nuovo oggetto {@link Parser} utilizzando lo {@link Scanner} specificato.
+     *
+     * @param scanner Lo scanner da utilizzare per il parsing.
+     */
     public Parser(Scanner scanner) {
         this.sc = scanner;
         opAssignOper = opAssignVal = null;
     }
 
-    public NodeProgram parse() throws SyntacticException { return this.parsePrg(); }
+    /**
+     * Avvia il parsing del programma.
+     * <br>Se il parsing ha successo, restituisce un oggetto {@link NodeProgram} che rappresenta l'AST del programma.
+     * <br>Se fallisce in caso di errore sintattico, viene lanciata un'eccezione {@link SyntacticException}.
+     *
+     * @return Un oggetto {@link NodeProgram} che rappresenta l'AST del programma.
+     * @throws SyntacticException Se si verifica un errore sintattico durante il parsing.
+     */
+    public NodeProgram parse() throws SyntacticException {
+        return this.parsePrg();
+    }
 
+    /**
+     * Effettua il parsing del programma principale.
+     *
+     * @return Un oggetto {@link NodeProgram} che rappresenta il nodo principale dell'AST.
+     * @throws SyntacticException Se si verifica un errore sintattico.
+     */
     private NodeProgram parsePrg() throws SyntacticException {
         Token tk = peekToken();
 
         System.out.println("parsePrg: " + tk.getType() + " " + tk.getLine() + " " + tk.getVal());
 
         switch (tk.getType()) {
-            //Prg -> DSs $
             case TYFLOAT, TYINT, ID, PRINT, EOF -> {
                 ArrayList<NodeDecSt> decSts = parseDSs();
                 match(TokenType.EOF);
@@ -34,39 +66,49 @@ public class Parser {
         }
     }
 
+    /**
+     * Effettua il parsing di una lista di dichiarazioni o istruzioni.
+     *
+     * @return Una lista di nodi {@link NodeDecSt} che rappresentano dichiarazioni o istruzioni.
+     * @throws SyntacticException Se si verifica un errore sintattico.
+     */
     private ArrayList<NodeDecSt> parseDSs() throws SyntacticException {
         Token tk = peekToken();
 
         System.out.println("parseDSs: " + tk.getType() + " " + tk.getLine() + " " + tk.getVal());
 
         switch (tk.getType()) {
-            //DSs -> Dcl DSs
             case TYFLOAT, TYINT -> {
                 NodeDecl decl = parseDcl();
                 ArrayList<NodeDecSt> decSts = parseDSs();
                 decSts.add(0, decl);
                 return decSts;
             }
-            //DSs -> Stm DSs
             case ID, PRINT -> {
                 NodeStm stm = parseStm();
                 ArrayList<NodeDecSt> decSts = parseDSs();
                 decSts.add(0, stm);
                 return decSts;
             }
-            //DSs -> ε
-            case EOF -> { return new ArrayList<>(); }
+            case EOF -> {
+                return new ArrayList<>();
+            }
             default -> throw new SyntacticException(tk.getLine(), "TYFLOAT, TYINT, ID, PRINT or EOF", tk.getType());
         }
     }
 
+    /**
+     * Effettua il parsing di una dichiarazione.
+     *
+     * @return Un oggetto {@link NodeDecl} che rappresenta una dichiarazione.
+     * @throws SyntacticException Se si verifica un errore sintattico.
+     */
     private NodeDecl parseDcl() throws SyntacticException {
         Token tk = peekToken();
 
         System.out.println("parseDcl: " + tk.getType() + " " + tk.getLine() + " " + tk.getVal());
 
         switch (tk.getType()) {
-            //Dcl -> Ty id DclP
             case TYFLOAT, TYINT -> {
                 LangType type = parseTy();
                 NodeId id = new NodeId(match(TokenType.ID).getVal());
@@ -77,18 +119,22 @@ public class Parser {
         }
     }
 
+    /**
+     * Effettua il parsing della parte opzionale di una dichiarazione.
+     *
+     * @return Un oggetto {@link NodeExpr} che rappresenta l'espressione associata alla dichiarazione, o null se assente.
+     * @throws SyntacticException Se si verifica un errore sintattico.
+     */
     private NodeExpr parseDclP() throws SyntacticException {
         Token tk = peekToken();
 
         System.out.println("parseDclP: " + tk.getType() + " " + tk.getLine() + " " + tk.getVal());
 
         switch (tk.getType()) {
-            //DclP -> ;
             case SEMI -> {
                 match(TokenType.SEMI);
                 return null;
             }
-            //DclP -> = Exp ;
             case ASS -> {
                 match(TokenType.ASS);
                 NodeExpr expr = parseExp();
@@ -99,26 +145,36 @@ public class Parser {
         }
     }
 
+    /**
+     * Effettua il parsing di un tipo di dato.
+     *
+     * @return Un oggetto {@link LangType} che rappresenta il tipo di dato.
+     * @throws SyntacticException Se si verifica un errore sintattico.
+     */
     private LangType parseTy() throws SyntacticException {
         return anyMatch(TokenType.TYFLOAT, TokenType.TYINT).getType() == TokenType.TYFLOAT ? LangType.FLOAT : LangType.INT;
     }
 
+    /**
+     * Effettua il parsing di un'istruzione.
+     *
+     * @return Un oggetto {@link NodeStm} che rappresenta l'istruzione.
+     * @throws SyntacticException Se si verifica un errore sintattico.
+     */
     private NodeStm parseStm() throws SyntacticException {
         Token tk = peekToken();
 
         System.out.println("parseStm: " + tk.getType() + " " + tk.getLine() + " " + tk.getVal());
 
         switch (tk.getType()) {
-            //Stm -> id Op Exp ;
             case ID -> {
                 NodeId id = new NodeId(match(TokenType.ID).getVal());
                 opAssignOper = parseOp();
-                if(opAssignOper != null) opAssignVal = tk;
+                if (opAssignOper != null) opAssignVal = tk;
                 NodeExpr expr = parseExp();
                 match(TokenType.SEMI);
                 return new NodeAssign(id, expr);
             }
-            //Stm -> print id ;
             case PRINT -> {
                 match(TokenType.PRINT);
                 NodePrint nodePrint = new NodePrint(new NodeId(match(TokenType.ID).getVal()));
@@ -129,12 +185,18 @@ public class Parser {
         }
     }
 
+    /**
+     * Effettua il parsing di un operatore di assegnamento.
+     *
+     * @return Un oggetto {@link Token} che rappresenta l'operatore, o null se non presente.
+     * @throws SyntacticException Se si verifica un errore sintattico.
+     */
     private Token parseOp() throws SyntacticException {
         Token op = anyMatch(TokenType.OP_ASS, TokenType.ASS);
 
         System.out.println("parseOp: " + op.getType() + " " + op.getLine() + " " + op.getVal());
 
-        if (op.getType() == TokenType.OP_ASS){
+        if (op.getType() == TokenType.OP_ASS) {
             switch (op.getVal()) {
                 case "+=" -> {
                     return new Token(TokenType.PLUS, op.getLine());
@@ -153,13 +215,18 @@ public class Parser {
         return null;
     }
 
+    /**
+     * Effettua il parsing di un'espressione.
+     *
+     * @return Un oggetto {@link NodeExpr} che rappresenta l'espressione.
+     * @throws SyntacticException Se si verifica un errore sintattico.
+     */
     private NodeExpr parseExp() throws SyntacticException {
         Token tk = peekToken();
 
         System.out.println("parseExp: " + tk.getType() + " " + tk.getLine() + " " + tk.getVal());
 
         switch (tk.getType()) {
-            //Exp -> Tr ExpP
             case INT, FLOAT, ID -> {
                 NodeExpr tr = parseTr();
                 return parseExpP(tr);
@@ -168,13 +235,19 @@ public class Parser {
         }
     }
 
+    /**
+     * Effettua il parsing della parte opzionale di un'espressione.
+     *
+     * @param left L'espressione già parsificata.
+     * @return Un oggetto {@link NodeExpr} che rappresenta l'espressione completa.
+     * @throws SyntacticException Se si verifica un errore sintattico.
+     */
     private NodeExpr parseExpP(NodeExpr left) throws SyntacticException {
         Token tk = peekToken();
 
         System.out.println("parseExpP: " + tk.getType() + " " + tk.getLine() + " " + tk.getVal());
 
         switch (tk.getType()) {
-            //ExpP -> - Tr ExpP, ExpP -> + Tr ExpP
             case MINUS, PLUS -> {
                 NodeBinOp binOp = new NodeBinOp(
                         left,
@@ -183,7 +256,6 @@ public class Parser {
                 );
                 return parseExpP(binOp);
             }
-            //ExpP -> ε
             case SEMI -> {
                 return left;
             }
@@ -191,13 +263,18 @@ public class Parser {
         }
     }
 
+    /**
+     * Effettua il parsing di un termine.
+     *
+     * @return Un oggetto {@link NodeExpr} che rappresenta il termine.
+     * @throws SyntacticException Se si verifica un errore sintattico.
+     */
     private NodeExpr parseTr() throws SyntacticException {
         Token tk = peekToken();
 
         System.out.println("parseTr: " + tk.getType() + " " + tk.getLine() + " " + tk.getVal());
 
         switch (tk.getType()) {
-            //Tr -> Val TrP
             case INT, FLOAT, ID -> {
                 NodeExpr val = parseVal();
                 return parseTrP(val);
@@ -206,13 +283,19 @@ public class Parser {
         }
     }
 
+    /**
+     * Effettua il parsing della parte opzionale di un termine.
+     *
+     * @param left Il termine già parsificato.
+     * @return Un oggetto {@link NodeExpr} che rappresenta il termine completo.
+     * @throws SyntacticException Se si verifica un errore sintattico.
+     */
     private NodeExpr parseTrP(NodeExpr left) throws SyntacticException {
         Token tk = peekToken();
 
         System.out.println("parseTrP: " + tk.getType() + " " + tk.getLine() + " " + tk.getVal());
 
         switch (tk.getType()) {
-            //TrP -> * Val TrP, TrP -> / Val TrP
             case TIMES, DIVIDE -> {
                 NodeBinOp binOp = new NodeBinOp(
                         left,
@@ -221,7 +304,6 @@ public class Parser {
                 );
                 return parseTrP(binOp);
             }
-            //TrP -> ε
             case MINUS, PLUS, SEMI -> {
                 return left;
             }
@@ -229,18 +311,22 @@ public class Parser {
         }
     }
 
+    /**
+     * Effettua il parsing di un valore.
+     *
+     * @return Un oggetto {@link NodeExpr} che rappresenta il valore.
+     * @throws SyntacticException Se si verifica un errore sintattico.
+     */
     private NodeExpr parseVal() throws SyntacticException {
         Token tk = peekToken();
 
         System.out.println("parseVal: " + tk.getType() + " " + tk.getLine() + " " + tk.getVal());
 
         switch (tk.getType()) {
-            //Val -> TYINT, Val -> TYFLOAT
             case INT, FLOAT -> {
                 match(tk.getType());
                 return new NodeConst(tk.getVal(), tk.getType() == TokenType.INT ? LangType.INT : LangType.FLOAT);
             }
-            //Val -> id
             case ID -> {
                 return new NodeDeref(new NodeId(match(TokenType.ID).getVal()));
             }
@@ -248,6 +334,13 @@ public class Parser {
         }
     }
 
+    /**
+     * Confronta il token corrente con il tipo atteso e lo consuma.
+     *
+     * @param type Il tipo di token atteso.
+     * @return Il token consumato.
+     * @throws SyntacticException Se il token corrente non corrisponde al tipo atteso.
+     */
     private Token match(TokenType type) throws SyntacticException {
         Token tk = peekToken();
 
@@ -257,6 +350,14 @@ public class Parser {
         else throw new SyntacticException(tk.getLine(), type.toString(), tk.getType());
     }
 
+    /**
+     * Confronta il token corrente con uno dei tipi attesi e lo consuma (ne basta uno).
+     *
+     * @param firstType Il primo tipo di token atteso.
+     * @param types     Gli altri tipi di token attesi.
+     * @return Il token consumato.
+     * @throws SyntacticException Se il token corrente non corrisponde a nessuno dei tipi attesi.
+     */
     private Token anyMatch(TokenType firstType, TokenType... types) throws SyntacticException {
         Token tk = peekToken();
 
@@ -269,31 +370,48 @@ public class Parser {
         throw new SyntacticException(tk.getLine(), firstType + " or " + TokenType.toStringEach(types), tk.getType());
     }
 
+    /**
+     * Restituisce il prossimo token senza consumarlo.
+     * <p>Se la variabile {@code opAssignVal} ha un valore, lo assegna al token. Esso corrisponde all'ID dell'assegnamento.</p>
+     * <p>Se la variabile {@code opAssignOper} ha un valore, lo assegna al token. Esso corrisponde all'operatore dell'assegnamento.</p>
+     * Mi permette di tenerli in memoria per la conversione da operatore di assegnamento composto a operatore di assegnamento semplice.
+     * Ad esempio, se ho un'assegnazione del tipo {@code a += 1}, il token {@code opAssignVal} conterrà {@code a} e {@code opAssignOper} conterrà {@code +}
+     * e l'espressione conterrà {@code 1}, in questo modo forzo la lettura a {@code a = a + 1}.
+     *
+     * @return Il prossimo token.
+     * @throws SyntacticException Se si verifica un errore lessicale.
+     */
     private Token peekToken() throws SyntacticException {
         Token token;
-        if(opAssignVal != null) token = opAssignVal;
-        else if(opAssignOper != null) token = opAssignOper;
+        if (opAssignVal != null) token = opAssignVal;
+        else if (opAssignOper != null) token = opAssignOper;
         else {
             try {
                 token = sc.peekToken();
-            } catch(LexicalException e) {
+            } catch (LexicalException e) {
                 throw new SyntacticException(e.getMessage(), e);
             }
         }
         return token;
     }
 
+    /**
+     * Restituisce il prossimo token e lo consuma.
+     * <p>Come nel {@link Parser#peekToken()} restituisco {@code opAssignVal} e {@code opAssignOper} nel caso in cui non fossero nulli.
+     * Successivamente li setto a {@code null} per poterli riutilizzare per altri token.</p>
+     *
+     * @return Il prossimo token consumato.
+     * @throws SyntacticException Se si verifica un errore lessicale.
+     */
     private Token nextToken() throws SyntacticException {
         Token token;
-        if(opAssignVal != null) {
+        if (opAssignVal != null) {
             token = opAssignVal;
             opAssignVal = null;
-        }
-        else if(opAssignOper != null) {
+        } else if (opAssignOper != null) {
             token = opAssignOper;
             opAssignOper = null;
-        }
-        else {
+        } else {
             try {
                 return sc.nextToken();
             } catch (LexicalException e) {
