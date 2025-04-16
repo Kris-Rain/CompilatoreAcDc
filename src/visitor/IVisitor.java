@@ -2,7 +2,7 @@ package visitor;
 
 import ast.*;
 
-interface IVisitor {
+public interface IVisitor {
 
     /**
      * Visita il nodo {@link NodeProgram} e ne esegue l'analisi semantica o la
