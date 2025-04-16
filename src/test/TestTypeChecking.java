@@ -13,7 +13,7 @@ import scanner.Scanner;
 import symbolTable.SymbolTable;
 import visitor.TypeCheckingVisitor;
 
-public class TestTypeChecking {
+class TestTypeChecking {
 
     private final HashMap<String, Parser> parsers = new HashMap<>();
     private final String[] testFiles = new String[] {

@@ -9,7 +9,7 @@ import java.io.FileNotFoundException;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TestAST {
+class TestAST {
     private final HashMap<String, Parser> parsers = new HashMap<>();
     private final String[] testFiles = new String[]{
             "testSemplice.txt",

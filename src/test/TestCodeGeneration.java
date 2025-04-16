@@ -13,10 +13,9 @@ import visitor.CodeGenerationVisitor;
 import visitor.TypeCheckingVisitor;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TestCodeGeneration {
+class TestCodeGeneration {
 
     private final HashMap<String, Parser> parsers = new HashMap<>();
     private final String[] testFiles = new String[] {

@@ -14,7 +14,7 @@ public class LexicalException extends Exception {
     /**
      * Crea una nuova {@link LexicalException} specificando la riga e il carattere che ha causato l'errore.
      * <p>Il messaggio di errore è costruito nel seguente formato:
-     * <pre>"Errore lessicale alla riga " + line + ": carattere '" + c + "' non accettato"</pre></p>
+     * <pre>"Errore lessicale alla riga " + line + ": carattere '" + c + "' non accettato"</pre>
      *
      * @param line La riga in cui si è verificato l'errore.
      * @param c Il carattere non accettato che ha causato l'errore.
@@ -26,7 +26,7 @@ public class LexicalException extends Exception {
     /**
      * Crea una nuova {@link LexicalException} specificando la riga e la sequenza di caratteri non riconosciuta.
      * <p>Il messaggio di errore è costruito nel seguente formato:
-     * <pre>"Errore lessicale alla riga " + line + ": sequenza di caratteri '" + seq + "' non riconosciuta"</pre></p>
+     * <pre>"Errore lessicale alla riga " + line + ": sequenza di caratteri '" + seq + "' non riconosciuta"</pre>
      *
      * @param line La riga in cui si è verificato l'errore.
      * @param seq La sequenza di caratteri non riconosciuta che ha causato l'errore.
@@ -39,7 +39,7 @@ public class LexicalException extends Exception {
      * Crea una nuova {@link LexicalException} specificando solo la riga in cui si è verificato l'errore.
      * In questo caso non è specificato il carattere o la sequenza di caratteri che ha causato l'errore poiché è stato impossibile.
      * <p>Il messaggio di errore è costruito nel seguente formato:
-     * <pre>"Errore lessicale alla riga " + line + ": impossibile leggere il carattere"</pre></p>
+     * <pre>"Errore lessicale alla riga " + line + ": impossibile leggere il carattere"</pre>
      *
      * @param line La riga in cui si è verificato l'errore.
      */

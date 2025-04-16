@@ -16,7 +16,7 @@ public class SyntacticException extends Exception {
     /**
      * Crea una nuova {@link SyntacticException} specificando la riga, il token atteso e il token trovato.
      * <p>Il messaggio di errore è costruito nel seguente formato:
-     * <pre>"Expected " + expected + " but found " + found + " at line " + line</pre></p>
+     * <pre>"Expected " + expected + " but found " + found + " at line " + line</pre>
      *
      * @param line La riga in cui si è verificato l'errore.
      * @param expected Il token atteso.

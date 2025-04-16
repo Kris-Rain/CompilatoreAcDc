@@ -93,7 +93,6 @@ public class Scanner {
 	 *    <li>Il carattere letto non è valido (errore lessicale);</li>
 	 *    <li>Si verifica un {@link IOException}: in questo caso specifico viene lanciata l'eccezione con la relativa riga.</li>
 	 * </ul>
-	 * </p>
 	 *
 	 * @return Il prossimo token.
      * @throws LexicalException Se si verifica un errore lessicale.
@@ -112,7 +111,6 @@ public class Scanner {
 	 *    <li>Il carattere letto non è valido (errore lessicale);</li>
 	 *    <li>Si verifica un {@link IOException}: in questo caso specifico viene lanciata l'eccezione con la relativa riga.</li>
 	 * </ul>
-	 * </p>
 	 *
      * @return Il prossimo token.
      * @throws LexicalException Se si verifica un errore lessicale.

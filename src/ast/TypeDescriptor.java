@@ -60,7 +60,6 @@ public class TypeDescriptor {
      *     <li>Entrambi i tipi sono uguali.</li>
      *     <li>Il tipo corrente è {@code TypeTD.INT} e l'altro è {@code TypeTD.FLOAT}.</li>
      * </ul>
-     * </p>
      *
      * @param tD Il {@code TypeDescriptor} con cui verificare la compatibilità.
      * @return {@code true} se i due {@code TypeDescriptor} sono compatibili, {@code false} altrimenti.
