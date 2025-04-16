@@ -2,6 +2,16 @@ package ast;
 
 import visitor.IVisitor;
 
+/**
+ * Classe astratta che rappresenta un nodo generico dell'AST.
+ * <p>La classe {@code NodeAST} è la classe base per <em>tutti</em> i nodi dell'AST.
+ *
+ * @see NodeDecSt
+ * @see NodeExpr
+ * @see NodeProgram
+ * @see NodeId
+ * @author Kristian Rigo (matr. 20046665)
+ */
 public abstract class NodeAST {
 
     /**
