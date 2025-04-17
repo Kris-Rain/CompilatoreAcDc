@@ -86,8 +86,7 @@ public class TypeCheckingVisitor implements IVisitor {
                 nodeDecl.getInit().accept(this);
 
                 if (resType.isError() && !resType.isCompatible(typeDecl)) {
-                    resType = new TypeDescriptor(TypeTD.ERROR,
-                            err.getMsg() + "Semantic error declaration of <" + typeDecl.getType() + " " + idName + ">: impossible conversion from FLOAT to INT\n");
+                    resType = new TypeDescriptor(TypeTD.ERROR, err.getMsg() + "Semantic error declaration of <" + typeDecl.getType() + " " + idName + ">: impossible conversion from FLOAT to INT\n");
                 } else resType = new TypeDescriptor(TypeTD.ERROR, err.getMsg() + resType.getMsg());
             }
         } else if (nodeDecl.getInit() != null) {
@@ -113,8 +112,7 @@ public class TypeCheckingVisitor implements IVisitor {
 
         System.out.println((entry != null) ? ("NodeId: idName = " + nodeId.getIdName() + ", attribute type = " + entry.getType()) : ("NodeId: idName = " + nodeId.getIdName() + ", attribute type = null"));
 
-        if (entry == null)
-            resType = new TypeDescriptor(TypeTD.ERROR, "Semantic error: identifier <" + nodeId.getIdName() + "> not declared\n");
+        if (entry == null) resType = new TypeDescriptor(TypeTD.ERROR, "Semantic error: identifier <" + nodeId.getIdName() + "> not declared\n");
         else resType = new TypeDescriptor(entry.getType() == LangType.INT ? TypeTD.INT : TypeTD.FLOAT);
     }
 

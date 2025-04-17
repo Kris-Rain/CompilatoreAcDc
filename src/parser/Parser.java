@@ -41,9 +41,7 @@ public class Parser {
      * @return Un oggetto {@link NodeProgram} che rappresenta l'AST del programma.
      * @throws SyntacticException Se si verifica un errore sintattico durante il parsing.
      */
-    public NodeProgram parse() throws SyntacticException {
-        return this.parsePrg();
-    }
+    public NodeProgram parse() throws SyntacticException { return this.parsePrg(); }
 
     /**
      * Effettua il parsing del programma principale.
@@ -90,9 +88,7 @@ public class Parser {
                 decSts.add(0, stm);
                 return decSts;
             }
-            case EOF -> {
-                return new ArrayList<>();
-            }
+            case EOF -> { return new ArrayList<>(); }
             default -> throw new SyntacticException(tk.getLine(), "TYFLOAT, TYINT, ID, PRINT or EOF", tk.getType());
         }
     }
@@ -198,18 +194,10 @@ public class Parser {
 
         if (op.getType() == TokenType.OP_ASS) {
             switch (op.getVal()) {
-                case "+=" -> {
-                    return new Token(TokenType.PLUS, op.getLine());
-                }
-                case "-=" -> {
-                    return new Token(TokenType.MINUS, op.getLine());
-                }
-                case "*=" -> {
-                    return new Token(TokenType.TIMES, op.getLine());
-                }
-                case "/=" -> {
-                    return new Token(TokenType.DIVIDE, op.getLine());
-                }
+                case "+=" -> { return new Token(TokenType.PLUS, op.getLine()); }
+                case "-=" -> { return new Token(TokenType.MINUS, op.getLine()); }
+                case "*=" -> { return new Token(TokenType.TIMES, op.getLine()); }
+                case "/=" -> { return new Token(TokenType.DIVIDE, op.getLine()); }
             }
         }
         return null;
@@ -256,9 +244,7 @@ public class Parser {
                 );
                 return parseExpP(binOp);
             }
-            case SEMI -> {
-                return left;
-            }
+            case SEMI -> { return left; }
             default -> throw new SyntacticException(tk.getLine(), "MINUS, PLUS or EOF", tk.getType());
         }
     }
@@ -304,9 +290,7 @@ public class Parser {
                 );
                 return parseTrP(binOp);
             }
-            case MINUS, PLUS, SEMI -> {
-                return left;
-            }
+            case MINUS, PLUS, SEMI -> { return left; }
             default -> throw new SyntacticException(tk.getLine(), "TIMES, DIVIDE, MINUS, PLUS or SEMI", tk.getType());
         }
     }
@@ -327,9 +311,7 @@ public class Parser {
                 match(tk.getType());
                 return new NodeConst(tk.getVal(), tk.getType() == TokenType.INT ? LangType.INT : LangType.FLOAT);
             }
-            case ID -> {
-                return new NodeDeref(new NodeId(match(TokenType.ID).getVal()));
-            }
+            case ID -> { return new NodeDeref(new NodeId(match(TokenType.ID).getVal())); }
             default -> throw new SyntacticException(tk.getLine(), "INT, FLOAT or ID", tk.getType());
         }
     }
