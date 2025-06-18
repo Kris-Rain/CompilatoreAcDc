@@ -79,13 +79,13 @@ public class Parser {
             case TYFLOAT, TYINT -> {
                 NodeDecl decl = parseDcl();
                 ArrayList<NodeDecSt> decSts = parseDSs();
-                decSts.add(0, decl);
+                decSts.addFirst(decl);
                 return decSts;
             }
             case ID, PRINT -> {
                 NodeStm stm = parseStm();
                 ArrayList<NodeDecSt> decSts = parseDSs();
-                decSts.add(0, stm);
+                decSts.addFirst(stm);
                 return decSts;
             }
             case EOF -> { return new ArrayList<>(); }

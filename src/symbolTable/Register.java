@@ -1,6 +1,7 @@
 package symbolTable;
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 /**
  * La classe {@code Register} gestisce i registri disponibili per l'allocazione durante la generazione del codice <em>dc</em> a partire da un codice <em>ac</em>.
@@ -25,8 +26,8 @@ public class Register {
      */
     public static char newRegister() throws RegisterException {
         try {
-            return registers.remove(0);
-        } catch (IndexOutOfBoundsException e) {
+            return registers.removeFirst();
+        } catch (NoSuchElementException e) {
             throw new RegisterException("Nessun registro disponibile", e);
         }
     }
@@ -51,7 +52,6 @@ public class Register {
         for (char c = 'a'; c <= 'z'; c++) {
             registers.add(c);
         }
-
         for (char c = 'A'; c <= 'Z'; c++) {
             registers.add(c);
         }
